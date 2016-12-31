@@ -35,9 +35,21 @@ function navigate_sidebar(index){
 	window.location.href = sidebar_URLs[index];
 }
 
+function navigate_back(index){
+	window.history.go(-index);
+}
+
+function navigate_forward(index){
+	window.history.go(index);
+}
+
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse){
-		if (request.view_video)
+		if (request.back)
+			navigate_back(request.back);
+		else if (request.forward)
+			navigate_forward(request.forward);
+		else if (request.view_video)
 			navigate_video(request.view_video);
 		else if (request.view_sidebar)
 			navigate_sidebar(request.view_sidebar);

@@ -14,13 +14,12 @@
 	"content_scripts": [
 		{
 			"matches": ["*://www.youtube.com/*"],
-			"js": ["jquery-3.1.1.slim.min.js", "artyom.min.js", "navigation.js", "artyomCommands.js"]
+			"js": ["jquery-3.1.1.slim.min.js", "artyom.min.js", "artyomCommands.js", "navigation.js"]
 		}
 	],
 
 	"permissions": [
 		"activeTab",
-		"audioCapture",
 		"tabs",
 		"background"
 	]

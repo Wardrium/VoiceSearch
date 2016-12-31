@@ -22,25 +22,29 @@ $(document).ready(function(){
 	});
 });
 
-// Returns what page on youtube user is at. 0 = home, 1 = search, -1 = none of the above
-function get_page(){
+var nav = {
+	// Returns what page on youtube user is at. 0 = home, 1 = search, -1 = none of the above
+	get_page: function(){
 
-}
+	},
+	
+	navigate_video: function(index){
+		if (index == "zero")	// Artoym parses zero as a string instead of a number
+			index = 0;
+		window.location.href = video_URLs[index];
+	},
 
-function navigate_video(index){
-	window.location.href = video_URLs[index];
-}
+	navigate_sidebar: function(index){
+		window.location.href = sidebar_URLs[index];
+	},
 
-function navigate_sidebar(index){
-	window.location.href = sidebar_URLs[index];
-}
+	navigate_back: function(index){
+		window.history.go(-index);
+	},
 
-function navigate_back(index){
-	window.history.go(-index);
-}
-
-function navigate_forward(index){
-	window.history.go(index);
+	navigate_forward: function(index){
+		window.history.go(index);
+	},
 }
 
 chrome.runtime.onMessage.addListener(

@@ -1,23 +1,51 @@
+// Smart commands: command + a variable
 artyom.addCommands([
     {
-        indexes:["hello", "hey"],
-        action:function(i){
-            if (i == 0){
-                artyom.say("Hello! How are you?");
+        indexes:["video *", "sidebar *"],
+        smart: true,
+        action:function(cmd, index){
+            if (cmd == 0){  // Video
+                artyom.say("Opening video " + index);
+                nav.navigate_video(index);
+            }
+            else if (cmd == 1){  // Sidebar
+                artyom.say("Opening sidebar " + index);
+                nav.navigate_sidebar(index);
+            }
+        }
+    }
+]);
+
+// Normal command: no variable
+artyom.addCommands([
+    {
+        indexes:["back", "forward", "pause", "resume"],
+        action:function(cmd){
+            if (cmd == 0){ // Back
+                artyom.say("Going back a page.");
+                nav.navigate_back(1);
+            }
+            else if (cmd == 1){ // Forward
+                artyom.say("Going forward a page.");
+                nav.navigate_forward(1);
+            }
+            else if (cmd == 2){ // Pause
+
+            }
+            else if (cmd == 3){ // Resume
+
             }
         }
     }
 ]);
 
 function startArtyom(){
-
     artyom.initialize({
         lang: "en-GB",
-        continuous: false,
+        continuous: true,
         debug: true,
         listen: true
     })
-    artyom.say('initialized');
 }
 
 startArtyom();

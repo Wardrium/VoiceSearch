@@ -7,7 +7,7 @@ $(document).ready(function(){
 	var counter = 0;
 	$(".yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link").each(function(){
 		var name = $(this).text();
-		$(this).text(counter + ': ' + name);
+		$(this).html("<span style='color:red'>" + counter + ": </span>" + name);
 		video_URLs.push($(this).attr('href'));
 		counter += 1;
 	});
@@ -16,7 +16,7 @@ $(document).ready(function(){
 	counter = 0;
 	$(".guide-item.yt-uix-sessionlink.yt-valign.spf-link").each(function(){
 		var name = $(this).text();
-		$(this).text(counter + ': ' + name);
+		$(this).html("<span style='color:red'>" + counter + ": </span>" + name);
 		sidebar_URLs.push($(this).attr('href'));
 		counter += 1;
 	});

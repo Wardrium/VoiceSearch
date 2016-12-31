@@ -2,6 +2,12 @@
 var video_URLs = [];
 var sidebar_URLs = [];
 
+var page_type = {
+	home: 0,
+	search: 1,
+	none: -1,
+}
+
 $(document).ready(function(){
 	// Number the videos on the home page.
 	var counter = 0;
@@ -24,10 +30,15 @@ $(document).ready(function(){
 
 var nav = {
 	// Returns what page on youtube user is at. 0 = home, 1 = search, -1 = none of the above
-	get_page: function(){
-
+	get_page_type: function(){
+		if ($(".home")[0]){
+			return page_type.home;
+		}
+		else if ($(".search")[0]){
+			return page_type.search;
+		}
 	},
-	
+
 	navigate_video: function(index){
 		if (index == "zero")	// Artoym parses zero as a string instead of a number
 			index = 0;
@@ -44,6 +55,14 @@ var nav = {
 
 	navigate_forward: function(index){
 		window.history.go(index);
+	},
+
+	pause_video: function(){
+		$(".ytp-play-button.ytp-button").click();
+	},
+
+	resume_video: function(){
+		$(".ytp-play-button.ytp-button").click();
 	},
 }
 

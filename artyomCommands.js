@@ -1,3 +1,5 @@
+var page = nav.get_page_type();
+
 // Smart commands: command + a variable
 artyom.addCommands([
     {
@@ -19,7 +21,7 @@ artyom.addCommands([
 // Normal command: no variable
 artyom.addCommands([
     {
-        indexes:["back", "forward", "pause", "resume"],
+        indexes:["back", "forward", "paws", "pause", "resume"],
         action:function(cmd){
             if (cmd == 0){ // Back
                 artyom.say("Going back a page.");
@@ -29,11 +31,11 @@ artyom.addCommands([
                 artyom.say("Going forward a page.");
                 nav.navigate_forward(1);
             }
-            else if (cmd == 2){ // Pause
-
+            else if (cmd == 2 || cmd == 3){ // Pause. Artyom interprets my 'pause' as 'paws'.
+                nav.pause_video();
             }
-            else if (cmd == 3){ // Resume
-
+            else if (cmd == 4){ // Resume
+                nav.resume_video();
             }
         }
     }

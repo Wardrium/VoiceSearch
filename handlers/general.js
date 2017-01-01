@@ -6,33 +6,57 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "shutdown", "sleep", "wake", "back", "forward", "refresh", "home"],
+        indexes:["testing", "shutdown", "art sleep", "back", "forward", "refresh", "home"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working");
             }
             else if (cmd == 1){ // Shutdown
-                artyom.say("Shutting down");
+                artyom.newPrompt({
+                    question: "Are you sure?",
+                    options: ["yes", "no"],
+                    onMatch:function(res){
+                        var action;
+                        if (res == 0){   // yes
+                            action = function(){
+                                artyom.say("Shutting down...", {onEnd: function(){
+                                    stopArtyom();
+                                }});
+                            }
+                        }
+                        else if (res == 1){ //no
+                            action = function(){
+                                artyom.say("Shutdown canceled");
+                            }
+                        }
+                        return action;
+                    }
+                })
             }
-            else if (cmd == 2){ // Sleep: stop taking commands until wake
-                artyom.say("Sleeping...")
+            else if (cmd == 2){ // Sleep: stop taking commands until wake. art b/c artyom is hard to say.
+                artyom.newPrompt({
+                    question: "Sleeping...",
+                    options: ["art wake", "hartwick", "heartbreak", "art way", "earthquake"],   // All words artyom mishears 'art wake' as
+                    onMatch:function(res){
+                        return action = function(){
+                            artyom.say("Waking");
+                        }
+                    }
+                })
             }
-            else if (cmd == 3){ // Wake: start taking commands
-                artyom.say("Waking...")
-            }
-            else if (cmd == 4){ // Back
+            else if (cmd == 3){ // Back
                 artyom.say("Going back a page.");
                 nav.navigate_back(1);
             }
-            else if (cmd == 5){ // Forward
+            else if (cmd == 4){ // Forward
                 artyom.say("Going forward a page.");
                 nav.navigate_forward(1);
             }
-            else if (cmd == 6){ // Refresh
+            else if (cmd == 5){ // Refresh
                 artyom.say("Refreshing page.");
                 nav.refresh();
             }
-            else if (cmd == 7){ // Home
+            else if (cmd == 6){ // Home
                 artyom.say("Rerouting home.");
                 nav.navigate_home();
             }
@@ -56,11 +80,17 @@ artyom.addCommands([
 
 function startArtyom(){
     artyom.initialize({
+        mode: "normal",
         lang: "en-GB",
         continuous: true,
         debug: true,
         listen: true
     });
+}
+
+function stopArtyom(){
+    artyom.fatality();
+    chrome.runtime.sendMessage({shutdown: true});   // Alert background.js that voice commands were shut down.
 }
 
 startArtyom();

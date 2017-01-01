@@ -36,6 +36,15 @@ function enable(tab){
 	}
 }
 
+// Disable voice comamnds on a specific tab
+function disable(tabId){
+	if (enabled_tabs.has(tabId)){
+		enabled_tabs.delete(tabId);
+		chrome.browserAction.setIcon({tabId: tabId, path: "icons/icon_gray.png"});
+		chrome.tabs.reload(tabId);	// Lazy way: Refresh page so scripts don't get injected again if user re-enables voice commands.
+	}
+}
+
 // Check if user is on youtube. If user is not on youtube, then disable this extension.
 chrome.tabs.query({}, function(tabs){
 	for (var i = 0; i < tabs.length; ++i){
@@ -61,6 +70,9 @@ chrome.webNavigation.onCommitted.addListener(function(details){
 		}
 		else {
 			chrome.browserAction.disable(details.tabId);
+			if (enabled_tabs.has(details.tabId)){
+				enabled_tabs.delete(details.tabId);
+			}
 		}
 	}
 });
@@ -73,8 +85,15 @@ chrome.browserAction.onClicked.addListener(function(tab){
 	}
 });
 
+// If user closes tab, removes it from enabled_tabs
 chrome.tabs.onRemoved.addListener(function(tabId){
 	if (enabled_tabs.has(tabId)){
 		enabled_tabs.delete(tabId);
+	}
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender){
+	if (request.shutdown){
+		disable(sender.tab.id);
 	}
 });

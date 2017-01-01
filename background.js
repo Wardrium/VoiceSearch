@@ -54,7 +54,7 @@ chrome.webNavigation.onCommitted.addListener(function(details){
 	if (details.transitionType != "auto_subframe"){		// Extra requests that user did not request for?
 		if (details.url.match(/.*youtube.com\/.*/)){
 			chrome.browserAction.enable(details.tabId);
-			
+
 			if (enabled_tabs.has(details.tabId)){
 				enable({id: details.tabId, url: details.url});
 			}
@@ -70,5 +70,11 @@ chrome.browserAction.onClicked.addListener(function(tab){
 	if (!enabled_tabs.has(tab.id)){
 		enabled_tabs.add(tab.id);	// Add id of tab in.
 		enable(tab);
+	}
+});
+
+chrome.tabs.onRemoved.addListener(function(tabId){
+	if (enabled_tabs.has(tabId)){
+		enabled_tabs.delete(tabId);
 	}
 });

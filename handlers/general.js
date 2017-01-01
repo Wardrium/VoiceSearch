@@ -6,7 +6,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "shutdown", "artyom pause", "artyom resume", "back", "forward", "refresh"],
+        indexes:["testing", "shutdown", "sleep", "wake", "back", "forward", "refresh"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working");
@@ -15,11 +15,11 @@ artyom.addCommands([
                 artyom.say("Shutting down");
 
             }
-            else if (cmd == 2){ // Pause Artyom
-
+            else if (cmd == 2){ // Sleep: stop taking commands until wake
+                artyom.say("Sleeping...")
             }
-            else if (cmd == 3){ // Resume Artyom
-
+            else if (cmd == 3){ // Wake: start taking commands
+                artyom.say("Waking...")
             }
             else if (cmd == 4){ // Back
                 nav.navigate_back(1);

@@ -6,7 +6,7 @@
 	"version": "1.0",
 
 	"browser_action": {
-		"default_icon": "icons/icon.png",
+		"default_icon": "icons/icon_gray.png",
 		"default_title": "VoiceSearch"
 	},
 
@@ -14,14 +14,8 @@
 		"scripts": ["background.js"]
 	},
 
-	"content_scripts": [
-		{
-			"matches": ["*://www.youtube.com/*"],
-			"js": ["jquery-3.1.1.slim.min.js", "artyom.min.js", "navigation.js", "artyomCommands.js"]
-		}
-	],
-
 	"permissions": [
+		"*://www.youtube.com/*",
 		"activeTab",
 		"tabs",
 		"background",

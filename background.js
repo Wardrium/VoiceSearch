@@ -1,29 +1,14 @@
-var enabled;	// Should this extension be enabled on youtube.
-// Enable/disable usage on youtube. Note: this is not the same as chrome.browserAction.enable/disable.
-// The chrome.browserAction is always enabled on youtube, and disabled everywhere else.
-// If enabled is set to true while on youtube, then voice commands is activated. Otherwise, voice commands are disabled.
-function enable(){
-	enabled = true;
-	chrome.browserAction.setIcon({path: "icons/icon.png"});
-}
-function disable(){
-	enabled = false;
-	chrome.browserAction.setIcon({path: "icons/icon_gray.png"});
-}
+var content_scripts = ["jquery-3.1.1.slim.min.js", "artyom.min.js", "navigation.js", "artyomCommands.js"];
 
-// Load prexisting value of enabled (so if user disables it, it says disabled between sessions)
-chrome.storage.local.get('enabled', function(items){
-	if (items.enabled == null){
-		enable();
+// Enable voice commands on a specific tab
+function enable(tabID){
+	chrome.browserAction.setIcon({tabId: tabID, path: "icons/icon.png"});	// Change icon to non-gray version
+
+	// Inject content scripts
+	for (var i = 0; i < content_scripts.length; ++i){
+		chrome.tabs.executeScript(tabID, {file: content_scripts[i]});
 	}
-	else{
-		enabled = items.enabled;
-		if (enabled)
-			enable();
-		else
-			disable();
-	}
-});
+}
 
 // Check if user is on youtube. If user is not on youtube, then disable this extension.
 chrome.tabs.query({}, function(tabs){
@@ -39,20 +24,17 @@ chrome.tabs.query({}, function(tabs){
 
 // If the user changes pages, check new URL to see whether to enable or disable voice commands.
 chrome.tabs.onUpdated.addListener(function(tabID, changeInfo, tab){
-	if (changeInfo.url.match(/youtube.com/)){
-		chrome.browserAction.enable(tabID);
-	}
-	else {
-		chrome.browserAction.disable(tabID);
+	if (changeInfo.url){
+		if (changeInfo.url.match(/youtube.com/)){
+			chrome.browserAction.enable(tabID);
+		}
+		else {
+			chrome.browserAction.disable(tabID);
+		}
 	}
 });
 
-// Clicking the icon enables/disables the voice commands.
-chrome.browserAction.onClicked.addListener(function(){
-	if (enabled)
-		disable();
-	else
-		enable();
-	chrome.storage.local.set({'enabled': enabled});
+// Clicking the icon enables voice commands.
+chrome.browserAction.onClicked.addListener(function(tab){
+	enable(tab.id);
 });
-

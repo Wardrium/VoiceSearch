@@ -102,7 +102,7 @@ function labelSidebar() {
             name = name.substr(prefix.length);
         }
         $(this).html("<span style='color:red'>" + counter + ": </span>" + name);
-        sidebar_URLs.push($(this).attr('href'));
+        sidebar_URLs.push($(this).parent().parent().attr('href'));
         counter += 1;
     });
 }

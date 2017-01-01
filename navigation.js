@@ -1,4 +1,5 @@
 // Index of each element = number it is visually assigned
+console.log('navigation run once');
 var video_URLs = [];
 var sidebar_URLs = [];
 

@@ -7,7 +7,7 @@
 
 	"browser_action": {
 		"default_icon": "icons/icon_gray.png",
-		"default_title": "VoiceSearch"
+		"default_title": "Click to enable voice commands on youtube"
 	},
 
 	"background": {

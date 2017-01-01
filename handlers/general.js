@@ -6,18 +6,19 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "back", "forward"],
+        indexes:["testing", "back", "forward", "refresh"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working.");
             }
             if (cmd == 1){ // Back
-                artyom.say("Going back a page.");
                 nav.navigate_back(1);
             }
             else if (cmd == 2){ // Forward
-                artyom.say("Going forward a page.");
                 nav.navigate_forward(1);
+            }
+            else if (cmd == 3){ // Refresh
+                nav.refresh();
             }
         }
     }
@@ -30,7 +31,6 @@ artyom.addCommands([
         smart: true,
         action:function(cmd, index){
             if (cmd == 0){  // Sidebar
-                artyom.say("Opening sidebar " + index);
                 nav.navigate_sidebar(index);
             }
         }
@@ -53,15 +53,23 @@ var sidebar_URLs = [];
 
 var nav = {
     navigate_sidebar: function(index){
+        artyom.say("Opening sidebar " + index);
         window.location.href = sidebar_URLs[index];
     },
 
     navigate_back: function(index){
+        artyom.say("Going back a page.");
         window.history.go(-index);
     },
 
     navigate_forward: function(index){
+        artyom.say("Going forward a page.");
         window.history.go(index);
+    },
+
+    refresh: function(){
+        artyom.say("Refreshing page.");
+        window.location.reload();
     },
 }
 

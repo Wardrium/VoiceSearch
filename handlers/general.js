@@ -6,7 +6,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "shutdown", "sleep", "wake", "back", "forward", "refresh"],
+        indexes:["testing", "shutdown", "sleep", "wake", "back", "forward", "refresh", "home"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working");
@@ -31,6 +31,10 @@ artyom.addCommands([
             else if (cmd == 6){ // Refresh
                 artyom.say("Refreshing page.");
                 nav.refresh();
+            }
+            else if (cmd == 7){ // Home
+                artyom.say("Rerouting home.");
+                nav.navigate_home();
             }
         }
     }
@@ -57,7 +61,6 @@ function startArtyom(){
         debug: true,
         listen: true
     });
-    artyom.say("Initialized");
 }
 
 startArtyom();
@@ -66,6 +69,10 @@ startArtyom();
 var sidebar_URLs = [];
 
 var nav = {
+    navigate_home: function(){
+        window.location.href = "https://www.youtube.com/";
+    },
+
     navigate_sidebar: function(index){
         window.location.href = sidebar_URLs[index];
     },

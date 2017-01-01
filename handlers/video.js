@@ -1,5 +1,4 @@
 // YouTube video.
-console.log('video.js running');
 
 // Voice Commands----------------------------------------------------
 artyom.addCommands([

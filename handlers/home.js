@@ -1,5 +1,4 @@
 // YouTube homepage.
-console.log('home.js runnning');
 
 // Voice Commands----------------------------------------------------
 artyom.addCommands([

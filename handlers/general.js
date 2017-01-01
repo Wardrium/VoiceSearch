@@ -6,18 +6,28 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "back", "forward", "refresh"],
+        indexes:["testing", "shutdown", "artyom pause", "artyom resume", "back", "forward", "refresh"],
         action:function(cmd){
             if (cmd == 0){  // Testing
-                artyom.say("Working.");
+                artyom.say("Working");
             }
-            if (cmd == 1){ // Back
+            else if (cmd == 1){ // Shutdown
+                artyom.say("Shutting down");
+
+            }
+            else if (cmd == 2){ // Pause Artyom
+
+            }
+            else if (cmd == 3){ // Resume Artyom
+
+            }
+            else if (cmd == 4){ // Back
                 nav.navigate_back(1);
             }
-            else if (cmd == 2){ // Forward
+            else if (cmd == 5){ // Forward
                 nav.navigate_forward(1);
             }
-            else if (cmd == 3){ // Refresh
+            else if (cmd == 6){ // Refresh
                 nav.refresh();
             }
         }
@@ -44,6 +54,7 @@ function startArtyom(){
         debug: true,
         listen: true
     });
+    artyom.say("Initialized");
 }
 
 startArtyom();

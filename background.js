@@ -48,37 +48,19 @@ chrome.tabs.query({}, function(tabs){
 	}
 });
 
-var onUpdatedListenerExists = false;	// To prevent from adding multiple onUpdated listeners.
 // If the user changes pages, check new URL to see whether to enable or disable voice commands.
+var onUpdatedListenerExists = false;	// To prevent from adding multiple onUpdated listeners.
 chrome.webNavigation.onCommitted.addListener(function(details){
 	if (details.transitionType != "auto_subframe"){		// Extra requests that user did not request for?
 		if (details.url.match(/.*youtube.com\/.*/)){
 			chrome.browserAction.enable(details.tabId);
-
+			
 			if (enabled_tabs.has(details.tabId)){
 				enable({id: details.tabId, url: details.url});
-			}
-
-			if (!onUpdatedListenerExists){
-				// Add listener for when user navigates between youtube pages.
-				chrome.tabs.onUpdated.addListener(function(tabID, changeInfo, tab){
-					if (changeInfo.title){	// Title seems to be only one that shows up once upon navigation/refresh/back/forward.
-						if (enabled_tabs.has(tabID)){
-							enable(tab);
-						}
-					}
-				});
-				onUpdatedListenerExists = true;
 			}
 		}
 		else {
 			chrome.browserAction.disable(details.tabId);
-
-			// Remove listener added for when user navigates between youtube pages.
-			chrome.tabs.onUpdated.addListener(function(tabID, changeInfo, tab){
-				chrome.tabs.onUpdated.removeListener(arguments.callee);
-			});
-			onUpdatedListenerExists = false;
 		}
 	}
 });

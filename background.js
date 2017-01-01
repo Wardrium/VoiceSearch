@@ -1,27 +1,32 @@
 var enabled_tabs = new Set();	// Set of id's of tabs that have voice commands enabled.
 
 // Scripts required for all youtube pages.
-var generic_content_scripts = ["jquery-3.1.1.slim.min.js", "artyom.min.js", "navigation.js", "generalArtyomCommands.js"];
-var home_content_scripts = ["homeArtyomCommands.js"];	// Home page
-var video_content_scripts = ["videoArtyomCommands.js"];	// Watching video
+var generic_content_scripts = ["jquery-3.1.1.slim.min.js", "artyom.min.js", "handlers/general.js"];
+var home_content_scripts = ["handlers/home.js"];	// Home page
+var video_content_scripts = ["handlers/video.js"];	// Watching video
 
 // Enable voice commands on a specific tab
 function enable(tab){
 	chrome.browserAction.setIcon({tabId: tab.id, path: "icons/icon.png"});	// Change icon to non-gray version
 
-	// Inject generic scripts
-	for (var i = 0; i < generic_content_scripts.length; ++i){
-		chrome.tabs.executeScript(tab.id, {file: generic_content_scripts[i]});
+	// Helper function for injecting scripts.
+	function inject_scripts(scripts){
+		for (var i = 0; i < scripts.length; ++i){
+			chrome.tabs.executeScript(tab.id, {file: scripts[i]});
+		}
 	}
 
-	// Inject scripts based on what page of youtube the user is on
+	inject_scripts(generic_content_scripts);	// Inject generic scripts
+
+	// Inject page specific scripts
 	var url = tab.url;
-	console.log(url);
 	if (url.match(/.*youtube\.com\/$/)){	// Home
 		console.log('home');
+		inject_scripts(home_content_scripts);
 	}
 	else if (url.match(/.*youtube\.com\/watch\?.*/)){	// Video
 		console.log('video');
+		inject_scripts(video_content_scripts);
 	}
 	else if (url.match(/.*youtube\.com\/user\/.*\/featured/) || url.match(/.*youtube\.com\/channel\/.*\/featured/)){	// Channel home
 		console.log('channel home');

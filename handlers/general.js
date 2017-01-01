@@ -6,13 +6,16 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["back", "forward"],
+        indexes:["testing", "back", "forward"],
         action:function(cmd){
-            if (cmd == 0){ // Back
+            if (cmd == 0){  // Testing
+                artyom.say("Working.");
+            }
+            if (cmd == 1){ // Back
                 artyom.say("Going back a page.");
                 nav.navigate_back(1);
             }
-            else if (cmd == 1){ // Forward
+            else if (cmd == 2){ // Forward
                 artyom.say("Going forward a page.");
                 nav.navigate_forward(1);
             }

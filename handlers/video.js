@@ -3,7 +3,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["paws", "pause", "resume", "play", "rewind", "skip", "restart"],
+        indexes:["paws", "pause", "resume", "play", "rewind", "skip", "restart", "lower volume", "increase volume"],
         action:function(cmd){
             if (cmd == 0 || cmd == 1){ // Pause. Artyom interprets my 'pause' as 'paws'.
                 artyom.say("Pausing video");
@@ -24,6 +24,12 @@ artyom.addCommands([
             else if (cmd == 6){ // Restart video
                 artyom.say("Restarting video");
                 nav.set_timer(0);
+            }
+            else if (cmd == 7){
+
+            }
+            else if (cmd == 8){
+                
             }
         }
     }

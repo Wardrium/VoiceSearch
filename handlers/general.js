@@ -6,7 +6,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "shutdown", "art sleep", "back", "forward", "refresh", "home"],
+        indexes:["testing", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working");
@@ -15,7 +15,7 @@ artyom.addCommands([
                 artyom.newPrompt({
                     question: "Are you sure?",
                     options: ["yes", "no"],
-                    onMatch:function(res){
+                    onMatch: function(res){
                         var action;
                         if (res == 0){   // yes
                             action = function(){
@@ -31,18 +31,18 @@ artyom.addCommands([
                         }
                         return action;
                     }
-                })
+                });
             }
             else if (cmd == 2){ // Sleep: stop taking commands until wake. art b/c artyom is hard to say.
                 artyom.newPrompt({
                     question: "Sleeping...",
                     options: ["art wake", "hartwick", "heartbreak", "art way", "earthquake"],   // All words artyom mishears 'art wake' as
-                    onMatch:function(res){
+                    onMatch: function(res){
                         return action = function(){
                             artyom.say("Waking");
                         }
                     }
-                })
+                });
             }
             else if (cmd == 3){ // Back
                 artyom.say("Going back a page.");
@@ -59,6 +59,9 @@ artyom.addCommands([
             else if (cmd == 6){ // Home
                 artyom.say("Rerouting home.");
                 nav.navigate_home();
+            }
+            else if (cmd == 7){ // Search
+                sch.start_search();
             }
         }
     }
@@ -99,22 +102,27 @@ startArtyom();
 var sidebar_URLs = [];
 
 var nav = {
+    // Go back to YouTube home
     navigate_home: function(){
         window.location.href = "https://www.youtube.com/";
     },
 
+    // Navigate via the YouTube dropdown sidebar
     navigate_sidebar: function(index){
         window.location.href = sidebar_URLs[index];
     },
 
+    // Go forward a page
     navigate_back: function(index){
         window.history.go(-index);
     },
 
+    // Go back a page
     navigate_forward: function(index){
         window.history.go(index);
     },
 
+    // Refresh page
     refresh: function(){
         window.location.reload();
     },
@@ -138,3 +146,85 @@ function labelSidebar() {
 }
 
 labelSidebar();
+
+// Search------------------------------------------------------------
+var search_field = $("#masthead-search-term");
+
+var sch = {
+    // Start a search prompt.
+    start_search: function(){
+        artyom.newPrompt({
+            question: "What mode would you like to search in?",
+            options: ["word", "letter"],    // Word mode: type words the user says into search bar. Letter mode: types letters.
+            onMatch: function(res){
+                return action = function(){
+                    sch._start_search(res);
+                }
+            }
+        });
+    },
+
+    // Helper function to start_search. If mode == 0, word mode. If mode == 1, letter mode.
+    _start_search: function(mode){
+        if (mode == 0)
+            question = "Word mode";
+        else if (mode == 1)
+            question = "Letter mode";
+        artyom.newPrompt({
+            question: question,
+            smart: true,
+            options: ["*", "cancel", "search", "word", "letter", "edit"],
+            onMatch: function(res, search_str){
+                if (res == 0){
+                    sch._append_search(search_str, mode);
+                    sch._start_search(mode);
+                }
+                else if (res == 1){ // Cancel search
+                    sch._clear_search();
+                }
+                else if (res == 2){ // Search what is currently in search box
+                    $("#masthead-search").submit();
+                }
+                else if (res == 3 || res == 4){
+                    sch._start_search(res);
+                }
+                else if (res == 5){ // Edit errors that Artyom made
+                    sch._modify_search();
+                }
+            }
+        });
+    },
+
+    _modify_search: function(){
+        
+    },
+
+    // Clear the text in the search input field.
+    _clear_search: function(){
+        search_field.val('');
+    },
+
+    // Add text onto the search input field. If mode == 0, then add a space between current text and new text.
+    _append_search: function(text, mode){
+        if (mode == true){
+            if (search_field.val().length > 0)  // Only add space if search box is not empty yet.
+                search_field.val(search_field.val() + " " + text);
+            else
+                search_field.val(search_field.val() + text);
+        }
+        else {
+            search_field.val(search_field.val() + text);
+        }
+    },
+
+    // Remove the last word in the search box.
+    _remove_word_search: function(index){
+        var space_index = search_field.val().lastIndexOf(" ");
+        search_field.val(search_field.val().substring(0, space_index));
+    },
+
+    // Remove the last character in the text serach input field
+    _remove_character_search: function(){
+        search_field.val(search_field.val().substring(0, search_field.val().length - 1));
+    }
+}

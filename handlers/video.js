@@ -46,10 +46,10 @@ artyom.addCommands([
         indexes:["rewind *", "remind *", "skip *"],
         smart: true,
         action:function(cmd, index){
-            if (cmd == 0, 1){  // rewind. Sometimes artyom interprets rewind as remind.
+            if (cmd == 0 || cmd == 1){  // rewind. Sometimes artyom interprets rewind as remind.
                 if (Number(index)){ // insure index is a number
                     artyom.say("Rewinding " + index + " seconds")
-                    vid.set_timer(nav.get_timer() - index);
+                    vid.set_timer(vid.get_timer() - index);
                 }
                 else {
                     artyom.say("Did not understand rewind command")

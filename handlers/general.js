@@ -149,14 +149,17 @@ labelSidebar();
 
 // Search------------------------------------------------------------
 var search_field = $("#masthead-search-term");
+var search_history = [];   // Lazy way of undo-ing search changes. Just push copy of search_field's value into this each time it's modified.
 
 var sch = {
     // Start a search prompt.
     start_search: function(){
         artyom.newPrompt({
             question: "What mode would you like to search in?",
-            options: ["word", "letter"],    // Word mode: type words the user says into search bar. Letter mode: types letters.
+            options: ["word", "letter", "ward"],    // Word mode: type words the user says into search bar. Letter mode: types letters.
             onMatch: function(res){
+                if (res == 2)   // Artyom misinterprets word as ward sometimes
+                    res = 0;
                 return action = function(){
                     sch._start_search(res);
                 }
@@ -173,40 +176,69 @@ var sch = {
         artyom.newPrompt({
             question: question,
             smart: true,
-            options: ["*", "cancel", "search", "word", "letter", "edit"],
-            onMatch: function(res, search_str){
-                if (res == 0){
-                    sch._append_search(search_str, mode);
-                    sch._start_search(mode);
+            options: ["*"],
+            onMatch: function(i, res){
+                var action;
+
+                if (res.indexOf("cancel search") != -1){    // Cancel search
+                    action = function(){
+                        artyom.say("Canceling search");
+                    }
                 }
-                else if (res == 1){ // Cancel search
-                    sch._clear_search();
+                else if (res.indexOf("clear search") != -1){    // Clear search
+                    action = function(){
+                        sch._clear_search();
+                        sch._start_search(mode);
+                    }
                 }
-                else if (res == 2){ // Search what is currently in search box
-                    $("#masthead-search").submit();
+                else if (res.indexOf("start search") != -1){ // Search given text
+                    action = function(){
+                        artyom.say("Searching " + search_field.val());
+                        sch._submit_search();
+                    }
                 }
-                else if (res == 3 || res == 4){
-                    sch._start_search(res);
+                else if (res.indexOf("word mode") != -1){ // Search with word mode
+                    action = function(){
+                        sch._start_search(0);
+                    }
                 }
-                else if (res == 5){ // Edit errors that Artyom made
-                    sch._modify_search();
+                else if (res.indexOf("letter mode") != -1){ // Search with letter mode
+                    action = function(){
+                        sch._start_search(1);
+                    }
                 }
+                else if (res.indexOf("undo that") != -1){ // Undo previous action.
+                    action = function(){
+                        sch._undo_action();
+                        sch._start_search(mode);
+                    }
+                }
+                else {   // Add given text
+                    action = function(){
+                        sch._append_search(res, mode);
+                        sch._start_search(mode);
+                    }
+                }
+                return action;
             }
         });
     },
 
-    _modify_search: function(){
-        
-    },
-
     // Clear the text in the search input field.
     _clear_search: function(){
+        search_history.push(search_field.val());
         search_field.val('');
+    },
+
+    // Submit the search request.
+    _submit_search: function(){
+        $("#masthead-search").submit();
     },
 
     // Add text onto the search input field. If mode == 0, then add a space between current text and new text.
     _append_search: function(text, mode){
-        if (mode == true){
+        search_history.push(search_field.val());
+        if (mode == 0){
             if (search_field.val().length > 0)  // Only add space if search box is not empty yet.
                 search_field.val(search_field.val() + " " + text);
             else
@@ -217,14 +249,11 @@ var sch = {
         }
     },
 
-    // Remove the last word in the search box.
-    _remove_word_search: function(index){
-        var space_index = search_field.val().lastIndexOf(" ");
-        search_field.val(search_field.val().substring(0, space_index));
-    },
-
-    // Remove the last character in the text serach input field
-    _remove_character_search: function(){
-        search_field.val(search_field.val().substring(0, search_field.val().length - 1));
+    // Undos the previous action.
+    _undo_action: function(){
+        if (search_history.length > 0){
+            search_field.val(search_history[search_history.length - 1]);
+            search_history.pop();
+        }
     }
 }

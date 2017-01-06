@@ -6,7 +6,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search"],
+        indexes:["testing", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search", "down", "up", "top"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working");
@@ -62,6 +62,15 @@ artyom.addCommands([
             }
             else if (cmd == 7){ // Search
                 sch.start_search();
+            }
+            else if (cmd == 8){ // Scroll down
+                nav.scroll_down();
+            }
+            else if (cmd == 9){ // Scroll up
+                nav.scroll_up();
+            }
+            else if (cmd == 10){ // Scroll to top
+                nav.scroll_top();
             }
         }
     }
@@ -125,6 +134,21 @@ var nav = {
     // Refresh page
     refresh: function(){
         window.location.reload();
+    },
+
+    // Scroll down
+    scroll_down: function(){
+        window.scrollBy(0, 500);
+    },
+
+    // Scroll up
+    scroll_up: function(){
+        window.scrollBy(0, -500);
+    },
+
+    // Scroll to top
+    scroll_top: function(){
+        window.scrollTo(0, 0);
     },
 }
 

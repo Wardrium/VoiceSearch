@@ -28,6 +28,10 @@ function enable(tab){
 		console.log('video');
 		inject_scripts(video_content_scripts);
 	}
+	else if (url.match(/.*youtube\.com\/results\?.*/)){	// Search results
+		console.log('search');
+		inject_scripts(home_content_scripts);	// Home search scripts also works for search results
+	}
 	else if (url.match(/.*youtube\.com\/user\/.*\/featured/) || url.match(/.*youtube\.com\/channel\/.*\/featured/)){	// Channel home
 		console.log('channel home');
 	}

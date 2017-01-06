@@ -6,12 +6,19 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search", "down", "up", "top"],
+        indexes:["testing", "video7", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search", "down", "up", "top"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working");
             }
-            else if (cmd == 1){ // Shutdown
+            else if (cmd == 1){ // Video7. Artyom interprets video 7 as video7.
+                var success = nav.navigate_video(7);
+                if (success)
+                    artyom.say("Opening video 7");
+                else
+                    artyom.say("No video 7");
+            }
+            else if (cmd == 2){ // Shutdown
                 artyom.newPrompt({
                     question: "Are you sure?",
                     options: ["yes", "no"],
@@ -33,7 +40,7 @@ artyom.addCommands([
                     }
                 });
             }
-            else if (cmd == 2){ // Sleep: stop taking commands until wake. art b/c artyom is hard to say.
+            else if (cmd == 3){ // Sleep: stop taking commands until wake. art b/c artyom is hard to say.
                 artyom.newPrompt({
                     question: "Sleeping...",
                     options: ["art wake", "hartwick", "heartbreak", "art way", "earthquake"],   // All words artyom mishears 'art wake' as
@@ -44,32 +51,32 @@ artyom.addCommands([
                     }
                 });
             }
-            else if (cmd == 3){ // Back
+            else if (cmd == 4){ // Back
                 artyom.say("Going back a page.");
                 nav.navigate_back(1);
             }
-            else if (cmd == 4){ // Forward
+            else if (cmd == 5){ // Forward
                 artyom.say("Going forward a page.");
                 nav.navigate_forward(1);
             }
-            else if (cmd == 5){ // Refresh
+            else if (cmd == 6){ // Refresh
                 artyom.say("Refreshing page.");
                 nav.refresh();
             }
-            else if (cmd == 6){ // Home
+            else if (cmd == 7){ // Home
                 artyom.say("Rerouting home.");
                 nav.navigate_home();
             }
-            else if (cmd == 7){ // Search
+            else if (cmd == 8){ // Search
                 sch.start_search();
             }
-            else if (cmd == 8){ // Scroll down
+            else if (cmd == 9){ // Scroll down
                 nav.scroll_down();
             }
-            else if (cmd == 9){ // Scroll up
+            else if (cmd == 10){ // Scroll up
                 nav.scroll_up();
             }
-            else if (cmd == 10){ // Scroll to top
+            else if (cmd == 11){ // Scroll to top
                 nav.scroll_top();
             }
         }
@@ -79,10 +86,22 @@ artyom.addCommands([
 // Smart commands: command + a variable
 artyom.addCommands([
     {
-        indexes:["sidebar *"],
+        indexes:["video *", "sidebar *"],
         smart: true,
         action:function(cmd, index){
-            if (cmd == 0){  // Sidebar
+            if (cmd == 0){  // Video
+                if (index == "zero")    // Artyom parses zero as a string instead of a number.
+                    index = 0;
+                else if (index == "six" || index == "sex")    // Artyom parses six as a string instead of a number. Also mishears six as sex sometimes.
+                    index = 6;
+
+                var success = nav.navigate_video(index);
+                if (success)
+                    artyom.say("Opening video " + index);
+                else
+                    artyom.say("No video " + index);
+            }
+            if (cmd == 1){  // Sidebar
                 artyom.say("Opening sidebar " + index);
                 nav.navigate_sidebar(index);
             }
@@ -108,12 +127,24 @@ function stopArtyom(){
 startArtyom();
 
 // Navigation--------------------------------------------------------
+var video_URLs = [];
 var sidebar_URLs = [];
 
 var nav = {
     // Go back to YouTube home
     navigate_home: function(){
         window.location.href = "https://www.youtube.com/";
+    },
+
+    // Go to video index in video_URLs.
+    navigate_video: function(index){
+        if (video_URLs[index]){
+            window.location.href = video_URLs[index];
+            return true;
+        }
+        else{
+            return false;
+        }
     },
 
     // Navigate via the YouTube dropdown sidebar

@@ -3,7 +3,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["paws", "pause", "resume", "play", "rewind", "skip", "restart", "lower volume", "increase volume", "mute", "unmute"],
+        indexes:["paws", "pause", "resume", "play", "rewind", "skip", "restart", "lower volume", "increase volume", "mute", "unmute", "video *"],
         action:function(cmd){
             if (cmd == 0 || cmd == 1){ // Pause. Artyom interprets my 'pause' as 'paws'.
                 artyom.say("Pausing video");
@@ -68,7 +68,7 @@ artyom.addCommands([
     }
 ]);
 
-// Navigation--------------------------------------------------------
+// Video Playback----------------------------------------------------
 var video = $("video")[0];
 vid = {};
 
@@ -107,4 +107,30 @@ vid.unmute_video = function(){
     video.muted = false;
 }
 
+// Navigation--------------------------------------------------------
+var video_URLs = [];
+
+nav.navigate_video = function(index){
+    if (video_URLs[index]){
+        window.location.href = video_URLs[index];
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 // DOM modification--------------------------------------------------
+$(document).ready(function(){
+    // Number the videos on the home page.
+    var counter = 0;   // Start at -2 because there are two elemetns with title ID that are not video links.
+    $(".title").each(function(){
+        var url = $(this).parent().attr('href');
+        if (url){
+            var name = $(this).text();
+            $(this).html("<span style='color:red'>" + counter + ": </span>" + name);
+            video_URLs.push(url);
+            counter += 1;
+        }
+    });
+});

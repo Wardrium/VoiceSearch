@@ -6,7 +6,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["testing", "video7", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search", "down", "up", "top"],
+        indexes:["testing", "video7", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search", "down", "up", "top", "help"],
         action:function(cmd){
             if (cmd == 0){  // Testing
                 artyom.say("Working");
@@ -79,6 +79,9 @@ artyom.addCommands([
             else if (cmd == 11){ // Scroll to top
                 nav.scroll_top();
             }
+            else if (cmd == 12){ // Show commands
+                showCommands();
+            }
         }
     }
 ]);
@@ -122,6 +125,38 @@ function startArtyom(){
 function stopArtyom(){
     artyom.fatality();
     chrome.runtime.sendMessage({shutdown: true});   // Alert background.js that voice commands were shut down.
+}
+
+
+// Show voice commands
+var commands_showing = false;
+var general_commands = ["testing", "video *", "sidebar *", "shutdown", "art sleep", "back", "forward", "refresh", "home", "search", "down", "up", "top", "help"];  // Name of generic commands to display to user
+var page_commands = [];     // Name of page specific commands to display to user
+
+function showCommands(){
+    if (!commands_showing){
+        if (general_commands.length > 0){
+            var general = "General commands: ";
+            for (var i = 0; i < general_commands.length; ++i){
+                general = general + general_commands[i];
+                if (i < general_commands.length - 1)
+                    general = general + ", ";   // If not last command in list, add comma and space
+            }
+            $("#yt-masthead-content").append("<p>" + general + "</p>");
+        }
+
+        if (page_commands.length > 0){
+            var page = "Page specific commands: ";
+            for (var i = 0; i < page_commands.length; ++i){
+                page = page + page_commands[i];
+                if (i < page_commands.length - 1)
+                    page = page + ", ";   // If not last command in list, add comma and space
+            }
+            $("#yt-masthead-content").append("<p>" + page + "</p>");
+        }
+
+        commands_showing = true;
+    }
 }
 
 startArtyom();

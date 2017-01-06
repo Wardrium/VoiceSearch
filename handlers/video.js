@@ -32,18 +32,23 @@ artyom.addCommands([
                 vid.change_volume(0.2);
             }
             else if (cmd == 9){ // Mute volume
+                artyom.say("Muting sound");
                 vid.mute_video();
             }
             else if (cmd == 10){ // Unmute volume
+                artyom.say("Unmuting sound");
                 vid.unmute_video();
             }
             else if (cmd == 11){ // Go to video owner's channel
+                artyom.say("Going to channel");
                 nav.view_channel();
             }
             else if (cmd == 12){ // Subscribe to video owner
+                artyom.say("Subscribing");
                 nav.subscribe();
             }
             else if (cmd == 13){ // Unsubscribe to video owner
+                artyom.say("Unsubscribing");
                 nav.unsubscribe();
             }
         }
@@ -76,6 +81,8 @@ artyom.addCommands([
         }
     }
 ]);
+
+page_commands = ["pause", "resume", "play", "rewind", "skip", "rewind *", "skip *", "restart", "lower volume", "increase volume", "mute", "unmute", "channel", "subscribe", "unsubscribe"];
 
 // Video Playback----------------------------------------------------
 var video = $("video")[0];

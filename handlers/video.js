@@ -3,7 +3,7 @@
 // Voice Commands----------------------------------------------------
 artyom.addCommands([
     {
-        indexes:["paws", "pause", "resume", "play", "rewind", "skip", "restart", "lower volume", "increase volume", "mute", "unmute", "video *"],
+        indexes:["paws", "pause", "resume", "play", "rewind", "skip", "restart", "lower volume", "increase volume", "mute", "unmute", "channel", "subscribe", "unsubscribe"],
         action:function(cmd){
             if (cmd == 0 || cmd == 1){ // Pause. Artyom interprets my 'pause' as 'paws'.
                 artyom.say("Pausing video");
@@ -36,6 +36,15 @@ artyom.addCommands([
             }
             else if (cmd == 10){ // Unmute volume
                 vid.unmute_video();
+            }
+            else if (cmd == 11){ // Go to video owner's channel
+                nav.view_channel();
+            }
+            else if (cmd == 12){ // Subscribe to video owner
+                nav.subscribe();
+            }
+            else if (cmd == 13){ // Unsubscribe to video owner
+                nav.unsubscribe();
             }
         }
     }
@@ -118,6 +127,19 @@ nav.navigate_video = function(index){
     else{
         return false;
     }
+}
+
+// Go to video owner's channel
+nav.view_channel = function(){
+    window.location.href = $(".yt-user-photo.yt-uix-sessionlink.g-hovercard.spf-link").attr('href');
+}
+
+nav.subscribe = function(){
+    $(".yt-uix-button-subscribe-branded").click();
+}
+
+nav.unsubscribe = function(){
+    $(".yt-uix-button-subscribed-branded").click();
 }
 
 // DOM modification--------------------------------------------------

@@ -1,5 +1,5 @@
 # About
-A chrome extension for using voice commands to navigate through YouTube, control video playback settings, and search text. Does not yet support navigation through all pages on YouTube, just the major ones. Uses Artyom.js library wrapper for voice recognition (https://sdkcarlos.github.io/sites/artyom.html)
+A chrome extension for using voice commands to navigate through YouTube, control video playback settings, and search for videos. Uses Artyom.js library wrapper for voice recognition (https://sdkcarlos.github.io/sites/artyom.html)
 
 ## Installation
 1. Unpack the files into a folder
@@ -41,3 +41,9 @@ Note: Some commands take extra arguments. These are denoted with *.
 **Video Commands (Can be used to control video playback when watching a video):**
 * pause, resume, play, rewind, skip, restart, lower volume, increase volume, mute, unmute, channel, subscribe, unsubscribe (self explainatory)
 * rewind *, skip * can also be used to specify the number of seconds. rewind/skip without specifying the seconds will rewind/skip 5 seconds.
+ 
+# Future Improvements
+* UI for showing available commands.
+* UI for showing what Artyom processes user input as. Sometimes it will misinterpret what the user says, causing nothing to happen.
+* Support voice commands for all YouTube pages. Currently only supports the major ones.
+* Improve search mode commands to allow editing of text in the search box so user can fix mistakes faster.
